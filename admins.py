@@ -1,7 +1,10 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
+from kivy.uix.gridlayout import GridLayout
+from kivy.clock import Clock
 
 class AdminsAuthenticationScreen(Screen):
     def __init__(self, **kwargs):
@@ -24,7 +27,21 @@ class AdminsAuthenticationScreen(Screen):
 
     def add_fingerprint(self, instance):
         print("Adding a fingerprint for Admins authentication")
+        self.show_notification("Fingerprint added!")
 
     def go_to_main_menu(self, instance):
         sm = self.manager
         sm.current = 'main_menu'
+
+    def show_notification(self, message, timeout=3):  # You can specify the timeout in seconds
+        content = BoxLayout(orientation='vertical', padding=5, spacing=5)
+        label = Label(text=message, halign='center', valign='middle')
+        content.add_widget(label)
+
+        popup = Popup(title='', content=content, size_hint=(None, None), size=(300, 100),
+                      auto_dismiss=False, pos_hint={'center_x': 0.5, 'center_y': 0.5})
+
+        # Schedule the popup to close after the specified timeout
+        Clock.schedule_once(lambda dt: popup.dismiss(), timeout)
+
+        popup.open()
