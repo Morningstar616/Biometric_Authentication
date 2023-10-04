@@ -1,26 +1,27 @@
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
-from kivy.uix.popup import Popup
-from kivy.uix.gridlayout import GridLayout
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.label import MDLabel
+from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.dialog import MDDialog
 from kivy.clock import Clock
 
 class FarmersAuthenticationScreen(Screen):
     def __init__(self, **kwargs):
         super(FarmersAuthenticationScreen, self).__init__(**kwargs)
-        layout = BoxLayout(orientation='vertical', spacing=20, padding=20, size_hint=(None, None), size=(400, 300))
-        layout.pos_hint = {'center_x': 0.5, 'center_y': 0.5}
 
-        label = Label(text="Farmers Authentication")
+        layout = MDBoxLayout(orientation='vertical', padding=40, spacing=20)
+
+        label = MDLabel(text="Farmers Authentication", theme_text_color="Primary", halign='center', font_style="H4")
         layout.add_widget(label)
 
-        add_fingerprint_button = Button(text="Add Fingerprint", size_hint=(None, None), size=(300, 50))
-        add_fingerprint_button.bind(on_press=self.add_fingerprint)
+        add_fingerprint_button = MDRaisedButton(text="Add Fingerprint", size_hint=(None, None), size=(250, 40), halign='center')
+        add_fingerprint_button.pos_hint = {'center_x': 0.5} 
+        add_fingerprint_button.bind(on_release=self.add_fingerprint)
         layout.add_widget(add_fingerprint_button)
 
-        back_button = Button(text="Back", size_hint=(None, None), size=(300, 50))
-        back_button.bind(on_press=self.go_to_main_menu)
+        back_button = MDRaisedButton(text="Back to Main Menu", size_hint=(None, None), size=(200, 40))
+        back_button.pos_hint = {'right': 1}
+        back_button.bind(on_release=self.go_to_main_menu)
         layout.add_widget(back_button)
 
         self.add_widget(layout)
@@ -34,15 +35,24 @@ class FarmersAuthenticationScreen(Screen):
         sm.current = 'main_menu'
     
     def show_notification(self, message, timeout=3):  # You can specify the timeout in seconds
-        content = BoxLayout(orientation='vertical', padding=5, spacing=5)
-        label = Label(text=message, halign='center', valign='middle')
-        content.add_widget(label)
+        notification_content = MDBoxLayout(orientation='vertical', padding=20, spacing=20)
 
-        popup = Popup(title='', content=content, size_hint=(None, None), size=(300, 100),
-                      auto_dismiss=False, pos_hint={'center_x': 0.5, 'center_y': 0.5})
+        label = MDLabel(
+            text=message,
+            halign='center',
+            valign='middle',
+            font_style="Body1"
+        )
+        notification_content.add_widget(label)
 
-        # Schedule the popup to close after the specified timeout
-        Clock.schedule_once(lambda dt: popup.dismiss(), timeout)
+        dialog = MDDialog(
+            title='',
+            type="custom",
+            content_cls=notification_content,
+            size_hint=(None, None),
+            size=(300, 150)
+        )
+        dialog.open()
 
-        popup.open()
-
+        # Schedule the dialog to close after the specified timeout
+        Clock.schedule_once(lambda dt: dialog.dismiss(), timeout)
