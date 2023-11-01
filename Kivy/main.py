@@ -5,7 +5,7 @@ from kivymd.app import MDApp
 from kivy.core.window import Window
 from kivy.utils import get_color_from_hex
 from kivy.uix.widget import Widget
-from farmers import FarmersAuthenticationScreen  
+from farmers import FarmersAuthenticationScreen
 from admins import AdminsAuthenticationScreen
 
 Builder.load_string('''
